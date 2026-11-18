@@ -258,8 +258,9 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 50px
       <p id="cs" role="status"></p>
     </form>
     <div class="btns">
-      <button class="btn p" id="mailbtn" type="button">✉ Send email · sa*******3@gmail.com</button>
-      <button class="btn s" id="callbtn" type="button">📞 Call me · 98********19</button>
+      <button class="btn p" id="mailbtn" type="button">✉ Send email</button>
+      <button class="btn s" id="callbtn" type="button">📞 Call me</button>
+      <button class="btn s" id="wabtn" type="button">💬 WhatsApp</button>
       <a class="btn s" href="https://linkedin.com/in/sarbjit-raju" target="_blank" rel="noopener">Connect on LinkedIn ↗</a>
     </div>
   </div>
@@ -323,11 +324,9 @@ if(WEB3FORMS_KEY){cf.hidden=false;cf.addEventListener('submit',async e=>{e.preve
 const _c='594f08520a4343005301434700',_k='rv9k2';
 function _n(){let o='';for(let i=0;i<_c.length;i+=2)o+=String.fromCharCode(parseInt(_c.substr(i,2),16)^_k.charCodeAt((i/2)%_k.length));return o}
 const cb=document.getElementById('callbtn');
-cb.addEventListener('click',e=>{if(!e.isTrusted)return;
-  const n=_n(),old=cb.innerHTML;
-  const touch=matchMedia('(pointer: coarse)').matches;
-  if(!touch&&navigator.clipboard){navigator.clipboard.writeText(n).then(()=>{cb.textContent='✅ Number copied';setTimeout(()=>cb.innerHTML=old,2500)}).catch(()=>{})}
-  location.href='tel:'+n});
+cb.addEventListener('click',e=>{if(!e.isTrusted)return;location.href='tel:'+_n()});
+document.getElementById('wabtn').addEventListener('click',e=>{if(!e.isTrusted)return;
+  window.open('https://wa.me/'+_n().replace(/\D/g,'')+'?text='+encodeURIComponent('Hi Sarbjit, I found your portfolio website.'),'_blank','noopener')});
 const _m='01174f1d4b0017531e013211540a5b1e585a045f';
 function _e(){let o='';for(let i=0;i<_m.length;i+=2)o+=String.fromCharCode(parseInt(_m.substr(i,2),16)^_k.charCodeAt((i/2)%_k.length));return o}
 document.getElementById('mailbtn').addEventListener('click',e=>{if(!e.isTrusted)return;
