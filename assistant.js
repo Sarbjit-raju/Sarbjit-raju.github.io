@@ -113,6 +113,58 @@
         chipsEl = $('aiChips'), status = $('aiStatus');
   if (!fab || !panel) return;
 
+  // ---------- transcript e-mail (Web3Forms) ----------
+  // Paste your free Web3Forms access key here. It is safe to be public: it can only send mail to
+  // the inbox it was created for, and that address is never in this file. Empty = nothing is recorded.
+  const W3F_KEY = '';
+  const W3F_URL = 'https://api.web3forms.com/submit';
+  const MAX_MAILS = 5;                                   // per visit, to limit spam/abuse
+  const SID = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const log_ = [];                                       // {t, role, text, id}
+  let sentUpTo = 0, mails = 0, idleT = null, vName = '', vEmail = '';
+  const who = $('aiWho'), note = $('aiNote');
+  if (W3F_KEY) { if (who) who.hidden = false; if (note) note.hidden = false; }
+
+  function validEmail(e) { return /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/.test(e); }
+
+  function flush(reason) {
+    if (!W3F_KEY || mails >= MAX_MAILS || sentUpTo >= log_.length) return;
+    const part = log_.slice(sentUpTo);
+    const lines = part.map(m => {
+      const hh = new Date(m.t).toLocaleTimeString('en-GB');
+      if (m.role === 'u') return '[' + hh + '] VISITOR: ' + m.text;
+      if (m.role === 's') return '[' + hh + '] ' + m.text;
+      return '[' + hh + '] ASSISTANT (' + (m.id ? 'topic: ' + m.id : 'NO MATCH - not in résumé data') + '): ' + m.text.replace(/\n/g, ' ').slice(0, 220);
+    });
+    const nav = navigator;
+    const payload = {
+      access_key: W3F_KEY,
+      subject: 'Portfolio chat #' + SID + (mails ? ' (part ' + (mails + 1) + ')' : ''),
+      from_name: 'Portfolio AI Assistant',
+      message: lines.join('\n'),
+      visitor_name: vName || '(not given)',
+      visitor_email: vEmail || '(not given)',
+      session: SID,
+      sent_because: reason,
+      visit_local_time: new Date().toString(),
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
+      language: nav.language || '',
+      came_from: document.referrer || '(direct)',
+      device: (matchMedia('(pointer: coarse)').matches ? 'phone/tablet' : 'computer') + ' ' + screen.width + 'x' + screen.height,
+      botcheck: ''
+    };
+    if (vEmail) payload.replyto = vEmail;
+    sentUpTo = log_.length; mails++;
+    const body = JSON.stringify(payload);
+    try {
+      if (reason === 'leaving' && nav.sendBeacon) nav.sendBeacon(W3F_URL, new Blob([body], { type: 'application/json' }));
+      else fetch(W3F_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body, keepalive: true }).catch(() => {});
+    } catch (_) {}
+  }
+  function queueFlush() { clearTimeout(idleT); idleT = setTimeout(() => flush('idle'), 75000); }
+  addEventListener('pagehide', () => flush('leaving'));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush('leaving'); });
+
   let speakOn = true, listening = false, rec = null, greeted = false;
   const synth = window.speechSynthesis;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -159,6 +211,8 @@
     status.textContent = 'Thinking…';
     setTimeout(() => {
       const r = answerFor(text);
+      log_.push({ t: Date.now(), role: 'u', text }, { t: Date.now(), role: 'b', text: r.a, id: r.id });
+      queueFlush();
       add('b', r.a, r.act); speak(r.a); status.textContent = '';
     }, 350);
   }
@@ -171,13 +225,23 @@
     }
     setTimeout(() => input.focus(), 50);
   }
-  function shut() { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); stopSpeak(); stopListen(); }
+  function shut() { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); stopSpeak(); stopListen(); flush('closed'); }
 
   fab.onclick = () => (panel.hidden ? open() : shut());
   close.onclick = shut;
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) shut(); });
   form.addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
   CHIPS.forEach(c => { const b = document.createElement('button'); b.type = 'button'; b.textContent = c; b.onclick = () => ask(c); chipsEl.appendChild(b); });
+
+  const wSave = $('aiWhoSave');
+  if (wSave) wSave.onclick = () => {
+    const n = ($('aiWhoName').value || '').trim().slice(0, 80), e = ($('aiWhoEmail').value || '').trim().slice(0, 254);
+    if (e && !validEmail(e)) { status.textContent = 'That email address does not look right.'; return; }
+    if (!n && !e) { status.textContent = 'Add a name or an email first.'; return; }
+    vName = n; vEmail = e;
+    log_.push({ t: Date.now(), role: 's', text: 'VISITOR SHARED DETAILS: ' + (n || '-') + ' / ' + (e || '-') });
+    status.textContent = '✅ Thanks! Sarbjit may reply to you.'; queueFlush();
+  };
 
   vol.onclick = () => { speakOn = !speakOn; vol.textContent = speakOn ? '🔊' : '🔇'; vol.setAttribute('aria-pressed', String(!speakOn)); if (!speakOn) stopSpeak(); };
 

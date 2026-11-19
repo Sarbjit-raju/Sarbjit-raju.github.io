@@ -163,6 +163,11 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 50px
 #aiMic{width:46px;background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text)!important}
 #aiMic.on{background:#ef4444!important;border-color:#ef4444!important;color:#fff!important;animation:aipulse2 1.2s infinite}
 @keyframes aipulse2{50%{opacity:.65}}
+#aiWho{display:flex;gap:6px;padding:0 12px 8px}
+#aiWho input{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font:inherit;font-size:.78rem}
+#aiWho button{border:1px solid var(--a2);background:transparent;color:var(--a2);border-radius:10px;padding:0 12px;font:inherit;font-size:.78rem;font-weight:600;cursor:pointer}
+#aiWho[hidden],#aiNote[hidden]{display:none}
+#aiNote{padding:0 16px 10px;font-size:.7rem;color:var(--muted);line-height:1.35}
 @media(max-width:520px){#aiFab span.t{display:none}#aiFab{padding:14px 16px}#aiPanel{right:12px;bottom:76px}}
 @media print{#aiFab,#aiPanel{display:none}}
 /* reveal */
@@ -314,6 +319,12 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 50px
   <div id="aiLog" aria-live="polite"></div>
   <div id="aiChips"></div>
   <div id="aiStatus" role="status"></div>
+  <div id="aiWho" hidden>
+    <input id="aiWhoName" maxlength="80" placeholder="Your name (optional)" aria-label="Your name">
+    <input id="aiWhoEmail" type="email" maxlength="254" placeholder="Your email (optional)" aria-label="Your email">
+    <button id="aiWhoSave" type="button">Save</button>
+  </div>
+  <p id="aiNote" hidden>Chats are shared with Sarbjit so he can follow up. Please don't type sensitive information.</p>
   <form id="aiForm" autocomplete="off">
     <button id="aiMic" type="button" aria-label="Ask with your voice">🎤</button>
     <input id="aiInput" maxlength="300" placeholder="Ask a question…" aria-label="Your question">
