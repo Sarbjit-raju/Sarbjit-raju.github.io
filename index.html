@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src https://api.web3forms.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src https://api.web3forms.com">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Sarbjit Raju — .NET Full Stack & Agentic AI Developer</title>
 <meta name="description" content="Sarbjit Raju — .NET Full Stack Developer and Agentic AI / Generative AI integration specialist. Production RAG systems, LLM automation, ASP.NET Core.">
@@ -131,6 +131,39 @@ button.btn{color:var(--text);font-family:inherit;font-size:.95rem}
 #cs{text-align:center;font-size:.9rem;color:var(--muted);min-height:1.4em}
 footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 50px}
 
+/* AI assistant */
+#aiFab{position:fixed;right:20px;bottom:20px;z-index:90;display:flex;align-items:center;gap:8px;padding:13px 20px;border:0;border-radius:99px;background:var(--grad);color:#fff;font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;box-shadow:0 12px 34px -10px var(--a1);transition:.25s}
+#aiFab:hover{transform:translateY(-3px)}
+#aiFab::after{content:"";position:absolute;inset:0;border-radius:99px;box-shadow:0 0 0 0 var(--a2);animation:aipulse 2.6s infinite}
+@keyframes aipulse{70%{box-shadow:0 0 0 14px transparent}100%{box-shadow:0 0 0 0 transparent}}
+#aiPanel{position:fixed;right:20px;bottom:84px;z-index:95;width:min(390px,calc(100vw - 24px));height:min(580px,calc(100vh - 110px));display:flex;flex-direction:column;background:var(--bg2);border:1px solid var(--border);border-radius:20px;box-shadow:0 30px 80px -20px rgba(0,0,0,.55);overflow:hidden}
+#aiPanel[hidden]{display:none}
+.aih{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card)}
+.aih .av{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-weight:800;font-size:.85rem}
+.aih b{display:block;font-size:.95rem}
+.aih small{display:block;color:var(--muted);font-size:.74rem;line-height:1.3}
+.aih .sp{flex:1}
+.aih button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.15rem;padding:4px 6px;border-radius:8px}
+.aih button:hover{color:var(--text)}
+#aiLog{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:88%;padding:10px 13px;border-radius:14px;font-size:.9rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.m.b{align-self:flex-start;background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
+.m.u{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:4px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.acts a,.acts button{padding:7px 12px;border-radius:99px;border:1px solid var(--a2);background:transparent;color:var(--a2);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
+#aiChips{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+#aiChips button{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted);font:inherit;font-size:.78rem;cursor:pointer}
+#aiChips button:hover{color:var(--text);border-color:var(--a1)}
+#aiStatus{padding:0 16px;min-height:1.2em;font-size:.78rem;color:var(--a2)}
+#aiForm{display:flex;gap:8px;padding:10px 12px 12px;border-top:1px solid var(--border)}
+#aiInput{flex:1;min-width:0;padding:11px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font:inherit;font-size:.92rem}
+#aiInput:focus{outline:2px solid var(--a1);border-color:transparent}
+#aiForm button{border:0;border-radius:12px;padding:0 14px;font-size:1.05rem;cursor:pointer;color:#fff;background:var(--grad);font-family:inherit}
+#aiMic{width:46px;background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text)!important}
+#aiMic.on{background:#ef4444!important;border-color:#ef4444!important;color:#fff!important;animation:aipulse2 1.2s infinite}
+@keyframes aipulse2{50%{opacity:.65}}
+@media(max-width:520px){#aiFab span.t{display:none}#aiFab{padding:14px 16px}#aiPanel{right:12px;bottom:76px}}
+@media print{#aiFab,#aiPanel{display:none}}
 /* reveal */
 .rv{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s}
 .rv.in{opacity:1;transform:none}
@@ -268,6 +301,24 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 50px
   </div>
 </div></section>
 
+<button id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Open AI assistant">🎙 <span class="t">Ask my AI</span></button>
+<div id="aiPanel" role="dialog" aria-label="AI assistant" hidden>
+  <div class="aih">
+    <div class="av">AI</div>
+    <div><b>Ask about Sarbjit</b><small>Answers come from his résumé</small></div>
+    <div class="sp"></div>
+    <button id="aiVol" type="button" aria-label="Toggle voice replies" aria-pressed="false">🔊</button>
+    <button id="aiClose" type="button" aria-label="Close assistant">✕</button>
+  </div>
+  <div id="aiLog" aria-live="polite"></div>
+  <div id="aiChips"></div>
+  <div id="aiStatus" role="status"></div>
+  <form id="aiForm" autocomplete="off">
+    <button id="aiMic" type="button" aria-label="Ask with your voice">🎤</button>
+    <input id="aiInput" maxlength="300" placeholder="Ask a question…" aria-label="Your question">
+    <button type="submit" aria-label="Send">➤</button>
+  </form>
+</div>
 <footer>© <span id="y"></span> Sarbjit Raju · Built with HTML, CSS &amp; a little JavaScript</footer>
 
 <script>
@@ -346,5 +397,6 @@ function draw(){cx.clearRect(0,0,W,H);const dark=root.dataset.theme==='dark',c=d
   requestAnimationFrame(draw)}
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)draw();
 </script>
+<script src="assistant.js" defer></script>
 </body>
 </html>
