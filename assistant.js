@@ -204,17 +204,36 @@
   function stopSpeak() { if (synth) synth.cancel(); }
   if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => {};
 
-  function ask(text) {
+  // ---------- cloud AI (Cloudflare Worker + D1 knowledge + LLM) ----------
+  // No secret keys here: the Worker holds them. If it is unreachable, the local résumé answers are used.
+  const AI_API = 'https://sarbjit-portfolio-ai.sarbjit-portfolio-ai.workers.dev/api/chat';
+  const hist = [];
+  async function cloudAnswer(text) {
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 20000);
+    try {
+      const r = await fetch(AI_API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: text, history: hist.slice(-6) }), signal: ctl.signal });
+      const j = await r.json();
+      return r.ok && j.answer ? j.answer : null;
+    } catch (_) { return null; } finally { clearTimeout(to); }
+  }
+
+  let busy = false;
+  async function ask(text) {
     text = String(text || '').trim().slice(0, 300);
-    if (!text) return;
+    if (!text || busy) return;
+    busy = true;
     add('u', text); input.value = '';
     status.textContent = 'Thinking…';
-    setTimeout(() => {
-      const r = answerFor(text);
-      log_.push({ t: Date.now(), role: 'u', text }, { t: Date.now(), role: 'b', text: r.a, id: r.id });
-      queueFlush();
-      add('b', r.a, r.act); speak(r.a); status.textContent = '';
-    }, 350);
+    const local = answerFor(text);
+    // greetings/thanks are instant; everything else goes to the cloud AI
+    const ai = (local.id === 'greet' || local.id === 'thanks') ? null : await cloudAnswer(text);
+    const a = ai || local.a;
+    hist.push({ role: 'user', content: text }, { role: 'assistant', content: a });
+    log_.push({ t: Date.now(), role: 'u', text }, { t: Date.now(), role: 'b', text: a, id: ai ? 'cloud-ai' + (local.id ? '/' + local.id : '') : local.id });
+    queueFlush();
+    add('b', a, local.act); speak(a); status.textContent = '';
+    busy = false;
   }
 
   function open() {
