@@ -23,6 +23,8 @@
       a: "He integrated the Chroma vector database for semantic document retrieval and achieved sub-second query latency on a corpus of 10,000+ documents. He is also proficient with Pinecone." },
     { id: 'agents', k: ['agent', 'agents', 'agentic', 'automation', 'automate', 'automated', 'autonomous', 'data entry', 'hours', 'saved', 'time saved', 'workflow', 'workflows'],
       a: "Sarbjit built Python-based agentic AI conversational agents, exposed through REST APIs, that autonomously automated about 60% of manual data-entry workflows (form processing and report generation). This saved the operations team 20+ hours every month." },
+    { id: 'projects', k: ['project', 'projects', 'portfolio', 'built', 'build', 'worked on'],
+      a: "Key projects: (1) a production Agentic AI RAG system (LangChain, LlamaIndex, Azure OpenAI GPT-4) that lets enterprise users query 10,000+ documents in natural language, with accuracy raised from ~55% to ~78%; (2) Python agentic AI agents that automated 60% of manual data-entry work, saving 20+ hours a month; (3) 3 full-stack ASP.NET Core modules of the AMP marketing platform, including a 35% faster View Asset module." },
     { id: 'platform', k: ['amp', 'platform', 'marketing', 'asset', 'modules', 'module', 'full stack project', 'asp.net project', 'releases', 'release', 'agile', 'team'],
       a: "On the core platform he delivered 3 full-stack modules of the AMP marketing platform using ASP.NET Core REST APIs and an HTML5/Bootstrap frontend, working in an Agile team of 5+ developers across 10+ production releases." },
     { id: 'perf', k: ['performance', 'optimise', 'optimize', 'optimized', 'optimised', 'sql optimization', 'caching', 'cache', 'faster', '35', 'query', 'queries', 'view asset'],
@@ -63,7 +65,7 @@
 
   const FALLBACK = "I only know what's in Sarbjit's résumé, and I couldn't find that. Try asking about his experience, skills, the RAG system he built, his education, or how to contact him.";
 
-  const CHIPS = ['Tell me about Sarbjit', 'What are his skills?', 'Biggest achievements?', 'Tell me about the RAG system', 'Education?', 'How can I contact him?'];
+  const CHIPS = ['Biggest achievements?', 'Tell me about the RAG system', 'Is he open to relocation?', 'Education?', 'Download résumé', 'How can I contact him?'];
 
   // ---------- matching ----------
   function norm(s) {
@@ -108,10 +110,11 @@
 
   // ---------- UI ----------
   const $ = id => document.getElementById(id);
-  const fab = $('aiFab'), panel = $('aiPanel'), log = $('aiLog'), form = $('aiForm'),
-        input = $('aiInput'), mic = $('aiMic'), vol = $('aiVol'), close = $('aiClose'),
-        chipsEl = $('aiChips'), status = $('aiStatus');
+  const fab = $('aiFab'), panel = $('aiPanel'), log = $('aiLog'), body = $('aiBody'), form = $('aiForm'),
+        input = $('aiInput'), mic = $('aiMic'), vol = $('aiVol'), close = $('aiClose'), mini = $('aiMin'),
+        chipsEl = $('aiChips'), status = $('aiStatus'), send = $('aiSend'), tease = $('aiTease');
   if (!fab || !panel) return;
+  const coarse = matchMedia('(pointer: coarse)').matches;
 
   // ---------- transcript e-mail (Web3Forms) ----------
   // Paste your free Web3Forms access key here. It is safe to be public: it can only send mail to
@@ -150,7 +153,7 @@
       timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
       language: nav.language || '',
       came_from: document.referrer || '(direct)',
-      device: (matchMedia('(pointer: coarse)').matches ? 'phone/tablet' : 'computer') + ' ' + screen.width + 'x' + screen.height,
+      device: (coarse ? 'phone/tablet' : 'computer') + ' ' + screen.width + 'x' + screen.height,
       botcheck: ''
     };
     if (vEmail) payload.replyto = vEmail;
@@ -165,43 +168,65 @@
   addEventListener('pagehide', () => flush('leaving'));
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush('leaving'); });
 
-  let speakOn = true, listening = false, rec = null, greeted = false;
+  let speakOn = true;
   const synth = window.speechSynthesis;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const BOT = '<svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg>';
+
+  // LLM answers can contain markdown; show and speak them as clean text.
+  function clean(t) {
+    return String(t || '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/__(.+?)__/g, '$1').replace(/`/g, '')
+      .replace(/^#{1,6}\s*/gm, '').replace(/^\s*[-*]\s+/gm, '• ').replace(/\n{3,}/g, '\n\n').trim();
+  }
+  function toEnd() { body.scrollTop = body.scrollHeight; }
 
   function add(role, text, act) {
+    const row = document.createElement('div');
+    row.className = 'row ' + role;
+    if (role === 'b') { const av = document.createElement('span'); av.className = 'mini'; av.innerHTML = BOT; row.appendChild(av); }
     const d = document.createElement('div');
     d.className = 'm ' + role;
     d.textContent = text;                       // textContent => no HTML injection possible
     if (act) {
-      const row = document.createElement('div'); row.className = 'acts';
+      const acts = document.createElement('div'); acts.className = 'acts';
       if (act === 'contact') {
         const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Go to Contact ↓';
-        b.onclick = () => { panel.hidden = true; stopSpeak(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); };
-        row.appendChild(b);
+        b.onclick = () => { minimize(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); };
+        acts.appendChild(b);
       } else if (act === 'resume') {
-        const a = document.createElement('a'); a.href = 'Sarbjit_Raju_Resume.pdf'; a.setAttribute('download', ''); a.textContent = '⬇ Download Résumé'; row.appendChild(a);
+        const a = document.createElement('a'); a.href = 'Sarbjit_Raju_Resume.pdf'; a.setAttribute('download', ''); a.textContent = '⬇ Download Résumé'; acts.appendChild(a);
       } else if (act === 'linkedin') {
-        const a = document.createElement('a'); a.href = 'https://linkedin.com/in/sarbjit-raju'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open LinkedIn ↗'; row.appendChild(a);
+        const a = document.createElement('a'); a.href = 'https://linkedin.com/in/sarbjit-raju'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open LinkedIn ↗'; acts.appendChild(a);
       }
-      d.appendChild(row);
+      d.appendChild(acts);
     }
-    log.appendChild(d); log.scrollTop = log.scrollHeight;
+    row.appendChild(d); log.appendChild(row); toEnd();
+    return row;
+  }
+  function typingRow() {
+    const row = add('b', '');
+    row.querySelector('.m').innerHTML = '<span class="typing" aria-label="Assistant is typing"><i></i><i></i><i></i></span>';
+    return row;
   }
 
+  // ---------- voice output ----------
   function pickVoice() {
     if (!synth) return null;
     const v = synth.getVoices();
-    return v.find(x => /en[-_]IN/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
+    return v.find(x => /en[-_]IN/i.test(x.lang) && /natural|neural|online/i.test(x.name)) ||
+           v.find(x => /^en/i.test(x.lang) && /natural|neural|online/i.test(x.name)) ||
+           v.find(x => /en[-_]IN/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
   }
   function speak(t) {
     if (!speakOn || !synth) return;
     synth.cancel();
-    const u = new SpeechSynthesisUtterance(t.replace(/\n/g, '. '));
-    const v = pickVoice(); if (v) u.voice = v; u.lang = v ? v.lang : 'en-IN'; u.rate = 1;
+    const u = new SpeechSynthesisUtterance(t.replace(/•/g, '').replace(/\n+/g, '. '));
+    const v = pickVoice(); if (v) u.voice = v; u.lang = v ? v.lang : 'en-IN'; u.rate = 1.02;
+    u.onstart = () => panel.classList.add('talking');
+    u.onend = u.onerror = () => panel.classList.remove('talking');
     synth.speak(u);
   }
-  function stopSpeak() { if (synth) synth.cancel(); }
+  function stopSpeak() { if (synth) synth.cancel(); panel.classList.remove('talking'); }
   if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => {};
 
   // ---------- cloud AI (Cloudflare Worker + D1 knowledge + LLM) ----------
@@ -222,34 +247,61 @@
   async function ask(text) {
     text = String(text || '').trim().slice(0, 300);
     if (!text || busy) return;
-    busy = true;
-    add('u', text); input.value = '';
-    status.textContent = 'Thinking…';
+    busy = true; send.disabled = true;
+    stopSpeak();
+    panel.classList.add('started');
+    add('u', text); input.value = ''; status.textContent = '';
+    const wait = typingRow();
     const local = answerFor(text);
-    // greetings/thanks are instant; everything else goes to the cloud AI
-    const ai = (local.id === 'greet' || local.id === 'thanks') ? null : await cloudAnswer(text);
-    const a = ai || local.a;
+    const quick = local.id === 'greet' || local.id === 'thanks';     // instant, no network needed
+    const ai = quick ? null : await cloudAnswer(text);
+    if (quick) await new Promise(r => setTimeout(r, 450));
+    const a = clean(ai || local.a);
+    wait.remove();
     hist.push({ role: 'user', content: text }, { role: 'assistant', content: a });
     log_.push({ t: Date.now(), role: 'u', text }, { t: Date.now(), role: 'b', text: a, id: ai ? 'cloud-ai' + (local.id ? '/' + local.id : '') : local.id });
     queueFlush();
-    add('b', a, local.act); speak(a); status.textContent = '';
-    busy = false;
+    add('b', a, local.act); speak(a);
+    busy = false; send.disabled = false;
+    if (!coarse) input.focus();
   }
 
+  // ---------- open / minimize / close ----------
+  let teaseOff = false;
+  try { teaseOff = sessionStorage.getItem('aiTease') === 'off'; } catch (_) {}
+  function hideTease(remember) {
+    if (tease) tease.hidden = true;
+    if (remember) { teaseOff = true; try { sessionStorage.setItem('aiTease', 'off'); } catch (_) {} }
+  }
   function open() {
-    panel.hidden = false; fab.setAttribute('aria-expanded', 'true');
-    if (!greeted) {
-      greeted = true;
-      add('b', "Hi! I'm Sarbjit's AI assistant. " + (SR ? 'Tap the microphone and ask me anything about him, or type your question.' : 'Type a question about his experience, skills or education.'));
-    }
-    setTimeout(() => input.focus(), 50);
+    panel.hidden = false; fab.setAttribute('aria-expanded', 'true'); hideTease(true);
+    if (!coarse) setTimeout(() => input.focus(), 60);
   }
-  function shut() { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); stopSpeak(); stopListen(); flush('closed'); }
+  function minimize() { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); stopSpeak(); cancelListen(); fab.focus(); }
+  function shut() { minimize(); flush('closed'); }
 
-  fab.onclick = () => (panel.hidden ? open() : shut());
+  fab.onclick = () => (panel.hidden ? open() : minimize());
+  mini.onclick = minimize;
   close.onclick = shut;
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) shut(); });
-  form.addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) minimize(); });
+  if (tease) {
+    tease.onclick = e => { if (e.target.closest('#aiTeaseX')) hideTease(true); else open(); };
+    if (!teaseOff) setTimeout(() => {
+      if (!panel.hidden || teaseOff) return;
+      tease.hidden = false; setTimeout(() => hideTease(false), 15000);
+    }, 3500);
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (voice) { voice.submit(); return; }        // pressing send while talking = "I'm done"
+    ask(input.value);
+  });
+  document.querySelectorAll('#aiTiles button').forEach(b => b.onclick = () => {
+    if (b.dataset.q) { ask(b.dataset.q); return; }
+    input.focus();
+    status.textContent = SR ? 'Type your question, or tap the mic to ask by voice.' : 'Type your question below.';
+  });
   CHIPS.forEach(c => { const b = document.createElement('button'); b.type = 'button'; b.textContent = c; b.onclick = () => ask(c); chipsEl.appendChild(b); });
 
   const wSave = $('aiWhoSave');
@@ -262,32 +314,76 @@
     status.textContent = '✅ Thanks! Sarbjit may reply to you.'; queueFlush();
   };
 
-  vol.onclick = () => { speakOn = !speakOn; vol.textContent = speakOn ? '🔊' : '🔇'; vol.setAttribute('aria-pressed', String(!speakOn)); if (!speakOn) stopSpeak(); };
+  vol.onclick = () => {
+    speakOn = !speakOn; vol.classList.toggle('off', !speakOn);
+    vol.setAttribute('aria-pressed', String(!speakOn));
+    vol.setAttribute('aria-label', speakOn ? 'Mute voice replies' : 'Turn on voice replies');
+    if (!speakOn) stopSpeak();
+  };
 
   // ---------- voice input ----------
-  function stopListen() { if (rec && listening) { try { rec.stop(); } catch (_) {} } listening = false; mic.classList.remove('on'); }
-  if (!SR) {
-    mic.hidden = true;
-  } else {
-    mic.onclick = () => {
-      if (listening) { stopListen(); return; }
-      stopSpeak();
-      rec = new SR(); rec.lang = 'en-IN'; rec.interimResults = true; rec.maxAlternatives = 1; rec.continuous = false;
-      let finalText = '';
-      rec.onstart = () => { listening = true; mic.classList.add('on'); status.textContent = '🎙 Listening… ask your question'; };
-      rec.onresult = ev => {
-        let t = '';
-        for (let i = ev.resultIndex; i < ev.results.length; i++) { t += ev.results[i][0].transcript; if (ev.results[i].isFinal) finalText = t; }
-        input.value = t;
-      };
-      rec.onerror = ev => {
-        listening = false; mic.classList.remove('on');
-        status.textContent = ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
-          ? 'Microphone access was blocked. Allow it in your browser, or type your question.'
-          : ev.error === 'no-speech' ? "I didn't hear anything. Tap the mic and try again." : 'Voice input is unavailable right now. Please type your question.';
-      };
-      rec.onend = () => { listening = false; mic.classList.remove('on'); const t = (finalText || input.value).trim(); if (t) { status.textContent = ''; ask(t); } };
-      try { rec.start(); } catch (_) { status.textContent = 'Voice input could not start. Please type your question.'; }
-    };
+  // Keeps listening while the visitor talks and only answers after a short silence,
+  // so natural pauses mid-question don't cut them off. Tap the mic (or send) to finish early.
+  const SILENCE_MS = 2000, NO_SPEECH_MS = 9000;
+  let voice = null;
+  function setListening(on) {
+    mic.classList.toggle('on', on); panel.classList.toggle('listening', on);
+    mic.setAttribute('aria-pressed', String(on));
+    mic.setAttribute('aria-label', on ? 'Stop listening and send' : 'Ask with your voice');
+    input.placeholder = on ? 'Listening… speak naturally' : 'Type your message…';
   }
+  function cancelListen() { if (voice) voice.cancel(); }
+
+  function startListen() {
+    stopSpeak();
+    const r = new SR();
+    r.lang = 'en-IN'; r.interimResults = true; r.continuous = true; r.maxAlternatives = 1;
+    let finalText = '', interim = '', done = false, heard = false, silenceT = null;
+    const noSpeechT = setTimeout(() => submit(), NO_SPEECH_MS);
+    const text = () => (finalText + ' ' + interim).replace(/\s+/g, ' ').trim();
+    function end() {
+      done = true; voice = null;
+      clearTimeout(silenceT); clearTimeout(noSpeechT);
+      try { r.abort(); } catch (_) {}
+      setListening(false);
+    }
+    function submit() {
+      if (done) return;
+      const t = text(); end();
+      if (t) { status.textContent = ''; ask(t); }
+      else { input.value = ''; status.textContent = "I didn't catch that. Tap the mic and try again."; }
+    }
+    function cancel() { if (!done) { end(); input.value = ''; status.textContent = ''; } }
+    voice = { submit, cancel };
+
+    r.onstart = () => { setListening(true); status.textContent = "🎙 Listening… take your time — I'll reply when you pause."; };
+    r.onresult = ev => {
+      clearTimeout(noSpeechT); heard = true;
+      interim = '';
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const tr = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) finalText += ' ' + tr; else interim += tr;
+      }
+      input.value = text();
+      clearTimeout(silenceT); silenceT = setTimeout(submit, SILENCE_MS);   // restart the pause timer on every word
+    };
+    r.onerror = ev => {
+      if (done || ev.error === 'no-speech' || ev.error === 'aborted') return;
+      end();
+      status.textContent = ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
+        ? 'Microphone access was blocked. Allow it in your browser, or type your question.'
+        : 'Voice input is unavailable right now. Please type your question.';
+    };
+    // Some browsers (e.g. Chrome on Android) stop by themselves after a short pause.
+    // Restart so the visitor can keep talking; the silence timer decides when they are finished.
+    r.onend = () => {
+      if (done) return;
+      if (heard && !silenceT) { submit(); return; }
+      try { r.start(); } catch (_) { submit(); }
+    };
+    try { r.start(); } catch (_) { end(); status.textContent = 'Voice input could not start. Please type your question.'; }
+  }
+
+  if (!SR) mic.hidden = true;
+  else mic.onclick = () => (voice ? voice.submit() : startListen());
 })();
