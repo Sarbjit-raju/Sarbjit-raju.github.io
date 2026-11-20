@@ -198,12 +198,21 @@ h1{font-size:clamp(2.9rem,7.4vw,5.4rem);font-weight:700;letter-spacing:-.04em;li
 
 /* ---------- about ---------- */
 .about{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--s7)}
-.about .text{display:grid;gap:var(--s4);color:var(--muted);font-size:1.03rem;max-width:62ch}
+.about .text{display:grid;align-content:start;gap:var(--s4);color:var(--muted);font-size:1.03rem;max-width:62ch}
 .about .text strong{color:var(--ink);font-weight:600}
 .facts{list-style:none;border-top:2px solid var(--ink)}
 .facts li{display:flex;justify-content:space-between;gap:var(--s4);padding:var(--s3) 0;border-bottom:1px solid var(--line);font-size:.95rem}
 .facts span{font:.78rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
 .facts b{font-weight:600;text-align:right}
+.facts .modes{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.facts .modes i{font:500 .8rem var(--f-mono);font-style:normal;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.facts li.focus{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+.facts .focus ol{list-style:none;display:grid;gap:var(--s2);counter-reset:f}
+.facts .focus ol li{counter-increment:f;display:grid;grid-template-columns:28px minmax(0,1fr);gap:2px var(--s3);padding:var(--s3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:.95rem;transition:border-color .2s}
+.facts .focus ol li:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.facts .focus ol li::before{content:counter(f);grid-row:span 2;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font:500 .8rem var(--f-mono)}
+.facts .focus ol b{text-align:left}
+.facts .focus small{color:var(--muted);font-size:.82rem}
 
 /* ---------- contact ---------- */
 .contact{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--s7);box-shadow:var(--shadow)}
@@ -266,18 +275,26 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
 #aiTease b{display:block;color:var(--accent);font-weight:600;margin-top:2px}
 #aiTeaseX{position:absolute;top:4px;right:6px;width:24px;height:24px;background:none;border:0;color:var(--muted);font-size:1.1rem;line-height:1;cursor:pointer;border-radius:6px}
 #aiTeaseX:hover{color:var(--ink);background:var(--surface2)}
-#aiFab{position:relative;display:flex;align-items:center;gap:10px;height:56px;padding:6px 20px 6px 6px;border:0;border-radius:99px;background:var(--ink);color:var(--bg);cursor:pointer;box-shadow:0 14px 34px -14px rgba(0,0,0,.55);transition:transform .2s var(--ease),box-shadow .2s}
-#aiFab:hover{transform:translateY(-2px);box-shadow:0 20px 44px -16px rgba(0,0,0,.6)}
-#aiFab:active{transform:translateY(0)}
-#aiFab .fab-av{width:44px;height:44px;border-radius:50%;background:var(--bg);color:var(--ink);display:grid;place-items:center;flex:none}
-#aiFab .fab-av svg{width:26px;height:26px}
-#aiFab .fab-txt{display:grid;text-align:left;line-height:1.2}
-#aiFab .fab-txt b{font:700 .95rem var(--f-display);letter-spacing:-.01em}
-#aiFab .fab-txt small{font:.68rem var(--f-mono);opacity:.7;margin-top:2px}
-#aiFab .on{position:absolute;left:38px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--ink)}
+@keyframes aiHalo{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.07);opacity:.75}}
+@keyframes aiTwinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.12) rotate(8deg)}}
+#aiDock{gap:14px}
+#aiFab{position:relative;width:62px;height:62px;margin:14px 14px 4px 0;padding:0;border:0;border-radius:50%;cursor:pointer;display:grid;place-items:center;
+  color:var(--accent-ink);background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--accent) 70%,#fff) 0%,var(--accent) 55%,color-mix(in srgb,var(--accent) 80%,#000) 100%);
+  box-shadow:0 10px 28px -8px color-mix(in srgb,var(--accent) 70%,transparent),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .2s var(--ease),box-shadow .2s}
+#aiFab::before,#aiFab::after{content:"";position:absolute;border-radius:50%;pointer-events:none;z-index:-1}
+#aiFab::before{inset:-9px;background:color-mix(in srgb,var(--accent) 22%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+#aiFab::after{inset:-18px;background:color-mix(in srgb,var(--accent) 10%,transparent);animation:aiHalo 3.2s ease-in-out infinite}
+#aiFab:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 16px 36px -8px color-mix(in srgb,var(--accent) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+#aiFab:active{transform:scale(.97)}
+#aiFab .spark{width:32px;height:32px;animation:aiTwinkle 3.2s ease-in-out infinite}
+#aiFab .fab-tip{position:absolute;bottom:calc(100% + 26px);right:50%;transform:translateX(50%);white-space:nowrap;padding:8px 13px;border-radius:10px;background:var(--ink);color:var(--bg);font:600 .82rem var(--f-body);box-shadow:var(--shadow);pointer-events:none;transition:opacity .2s,transform .2s var(--ease)}
+#aiFab .fab-tip::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink)}
+#aiFab:hover .fab-tip{transform:translateX(50%) translateY(-3px)}
+#aiFab[aria-expanded="true"] .fab-tip,#aiTease:not([hidden])~#aiFab .fab-tip{opacity:0;transform:translateX(50%) translateY(4px)}
+#aiFab[aria-expanded="true"]::after{animation:none}
 
 /* panel */
-#aiPanel{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:92px;z-index:95;width:min(420px,calc(100vw - 24px));height:min(680px,calc(100vh - 116px));display:flex;flex-direction:column;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.5),var(--shadow);overflow:hidden;transform-origin:bottom right;animation:aiIn .28s var(--ease) both}
+#aiPanel{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:112px;z-index:95;width:min(420px,calc(100vw - 24px));height:min(680px,calc(100vh - 116px));display:flex;flex-direction:column;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.5),var(--shadow);overflow:hidden;transform-origin:bottom right;animation:aiIn .28s var(--ease) both}
 #aiPanel[hidden]{display:none}
 #aiPanel .aih{display:flex;align-items:center;gap:var(--s3);padding:14px 12px 14px 16px;border-bottom:1px solid var(--line)}
 #aiPanel .aih .av{position:relative;width:40px;height:40px}
@@ -364,9 +381,12 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
 #aiPanel .ai-foot{padding:0 16px 12px;font-size:.7rem;color:var(--muted);text-align:center}
 
 @media (max-width:640px){
-  #aiFab{width:58px;height:58px;padding:7px;justify-content:center}
-  #aiFab .fab-txt{display:none}
-  #aiFab .on{left:auto;right:4px;top:4px}
+  #aiFab{width:56px;height:56px}
+  #aiFab .spark{width:25px;height:25px}
+  #aiFab .fab-tip{font-size:.76rem;padding:6px 10px;right:0;transform:none}
+  #aiFab .fab-tip::after{left:auto;right:22px}
+  #aiFab:hover .fab-tip{transform:translateY(-3px)}
+  #aiFab[aria-expanded="true"] .fab-tip,#aiTease:not([hidden])~#aiFab .fab-tip{transform:translateY(4px)}
 }
 @media (max-width:520px){
   #aiDock{right:14px;bottom:14px}
@@ -417,7 +437,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
 <main id="main">
 <header class="hero" id="top"><div class="wrap grid">
   <div>
-    <div class="avail"><i></i>Available · Senior .NET / Agentic AI roles · Open to relocate</div>
+    <div class="avail"><i></i>Available · Senior .NET / Agentic AI roles · Remote, hybrid or relocation</div>
     <h1>Sarbjit Raju</h1>
     <p class="thesis" aria-live="off">I build <span id="t">production RAG pipelines</span></p>
     <p class="lead">.NET Full Stack Developer and Agentic AI / Generative AI integration specialist, shipping production RAG pipelines and autonomous LLM automation inside a live enterprise SaaS product.</p>
@@ -554,11 +574,17 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
       <p>I'm targeting <strong>Senior .NET / Generative AI &amp; Agentic AI Engineer</strong> roles where deep backend engineering and applied LLM expertise are both valued.</p>
     </div>
     <ul class="facts rv">
-      <li><span>Role</span><b>.NET &amp; AI Developer</b></li>
+      <li><span>Role</span><b>.NET &amp; Agentic AI Developer</b></li>
       <li><span>Experience</span><b data-exp="long">3+ years</b></li>
-      <li><span>Location</span><b>Mohali, Punjab</b></li>
-      <li><span>Relocation</span><b>Open</b></li>
-      <li><span>Focus</span><b>RAG · Agents · APIs</b></li>
+      <li><span>Location</span><b>Mohali, Punjab, India</b></li>
+      <li><span>Work mode</span><b class="modes"><i>Remote</i><i>Hybrid</i><i>Relocation</i></b></li>
+      <li class="focus"><span>Focus</span>
+        <ol>
+          <li><b>Agentic AI systems</b><small>Autonomous agents, tool use, orchestration</small></li>
+          <li><b>RAG pipelines</b><small>Retrieval, vector search, prompt design</small></li>
+          <li><b>.NET backend &amp; APIs</b><small>ASP.NET Core, SQL Server, performance</small></li>
+        </ol>
+      </li>
     </ul>
   </div>
 </div></section>
@@ -655,7 +681,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
 
 <div id="aiDock">
   <div id="aiTease" hidden><button id="aiTeaseX" type="button" aria-label="Dismiss">×</button>Questions about Sarbjit's work?<b>Ask the AI assistant</b></div>
-  <button id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel"><span class="fab-av"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg></span><span class="fab-txt" aria-hidden="true"><b>Ask my AI</b><small>about my work</small></span><i class="on" aria-hidden="true"></i><span class="sr">Open Sarbjit's AI assistant</span></button>
+  <button id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel"><svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 3.5l1.9 5.6 5.6 1.9-5.6 1.9L11 18.5l-1.9-5.6L3.5 11l5.6-1.9z"/><path d="M18.5 2l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/><path d="M18 16l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg><span class="fab-tip" aria-hidden="true">Ask AI Assistant</span><span class="sr">Open Sarbjit's AI assistant</span></button>
 </div>
 
 <script>

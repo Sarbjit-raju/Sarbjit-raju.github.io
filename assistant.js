@@ -57,10 +57,10 @@
       a: "Alongside Semantic Kernel and AI agent orchestration, Sarbjit is currently also working with the Microsoft Agent Framework." },
     { id: 'education', k: ['education', 'study', 'studied', 'degree', 'college', 'university', 'btech', 'b tech', 'graduate', 'graduation', 'qualification', 'qualifications', 'rayat', 'bahra', 'school'],
       a: "Sarbjit holds a B.Tech in Computer Science Engineering from Rayat Bahra College of Engineering, Punjab (2017 – March 2021). Coursework included Data Structures, DBMS, Operating Systems, Software Engineering and Computer Networks." },
-    { id: 'location', k: ['where is he', 'where does he live', 'where he lives', 'where are you', 'location', 'located', 'live', 'city', 'based', 'relocate', 'relocation', 'remote', 'mohali', 'punjab', 'india'],
-      a: "Sarbjit is based in Mohali, Punjab, India, and is open to relocating." },
+    { id: 'location', k: ['where is he', 'where does he live', 'where he lives', 'where are you', 'location', 'located', 'live', 'city', 'based', 'relocate', 'relocation', 'remote', 'hybrid', 'onsite', 'on site', 'office', 'wfh', 'work from home', 'work mode', 'mohali', 'punjab', 'india'],
+      a: "Sarbjit is based in Mohali, Punjab, India. He is open to remote, hybrid and on-site roles, and is happy to relocate for the right opportunity." },
     { id: 'seeking', k: ['looking for', 'seeking', 'hire', 'hiring', 'opportunity', 'opportunities', 'open to', 'target', 'available', 'availability', 'job search', 'senior'],
-      a: "Sarbjit is targeting Senior .NET / Generative AI & Agentic AI Engineer roles where deep backend engineering and applied LLM integration are both valued. He is open to relocating." },
+      a: "Sarbjit is targeting Senior .NET / Generative AI & Agentic AI Engineer roles where deep backend engineering and applied LLM integration are both valued. He is open to remote, hybrid or on-site work, and to relocating." },
     { id: 'why', k: ['why should', 'why hire', 'what makes', 'unique', 'special', 'different', 'rare', 'strength', 'best', 'achievement', 'achievements', 'accomplishment', 'accomplishments', 'proud', 'impact', 'results', 'numbers', 'highlight', 'highlights'],
       a: "Sarbjit is one of the rare .NET developers who has shipped production Agentic AI and Generative AI systems in a live enterprise product. Highlights: AI accuracy up from ~55% to ~78%, 20+ hours saved per month through agentic automation, 35% faster asset retrieval, and 10+ production releases with zero critical incidents." },
     { id: 'contact', act: 'contact', k: ['contact', 'reach', 'email', 'mail', 'phone', 'call', 'number', 'mobile', 'whatsapp', 'whats app', 'message', 'get in touch', 'talk to', 'speak to', 'connect', 'address'],
@@ -75,7 +75,7 @@
 
   const FALLBACK = "I only know what's in Sarbjit's résumé, and I couldn't find that. Try asking about his experience, skills, the RAG system he built, his education, or how to contact him.";
 
-  const CHIPS = ['Biggest achievements?', 'Tell me about the RAG system', 'Is he open to relocation?', 'Education?', 'Download résumé', 'How can I contact him?'];
+  const CHIPS = ['Biggest achievements?', 'Tell me about the RAG system', 'Remote, hybrid or relocation?', 'Education?', 'Download résumé', 'How can I contact him?'];
 
   // ---------- matching ----------
   function norm(s) {
