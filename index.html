@@ -249,106 +249,131 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
   .btns .btn{flex:1 1 auto}
 }
 
-/* ---------- AI assistant (same structure, site design tokens) ---------- */
+/* ---------- AI assistant ---------- */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@keyframes aiIn{from{opacity:0;transform:translateY(10px) scale(.98)}}
+@keyframes aiIn{from{opacity:0;transform:translateY(14px) scale(.97)}}
+@keyframes aiMsg{from{opacity:0;transform:translateY(6px)}}
 @keyframes aiDot{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-3px)}}
 @keyframes aiRing{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.35);opacity:0}}
 .mono-av{display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg);flex:none}
 .mono-av svg{width:62%;height:62%}
 
+/* launcher */
 #aiDock{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:max(20px,env(safe-area-inset-bottom,0px));z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:var(--s3);pointer-events:none}
 #aiDock>*{pointer-events:auto}
-#aiTease{position:relative;max-width:250px;padding:12px 32px 12px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink);font-size:.88rem;line-height:1.4;cursor:pointer;animation:aiIn .4s var(--ease) both}
+#aiTease{position:relative;max-width:240px;padding:12px 32px 12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink);font-size:.86rem;line-height:1.45;cursor:pointer;animation:aiIn .4s var(--ease) both}
 #aiTease[hidden]{display:none}
 #aiTease b{display:block;color:var(--accent);font-weight:600;margin-top:2px}
-#aiTeaseX{position:absolute;top:4px;right:6px;width:24px;height:24px;background:none;border:0;color:var(--muted);font-size:1.1rem;line-height:1;cursor:pointer}
-#aiTeaseX:hover{color:var(--ink)}
-#aiFab{position:relative;width:58px;height:58px;padding:0;border:0;border-radius:50%;cursor:pointer;background:var(--ink);color:var(--bg);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
-#aiFab:hover{transform:translateY(-2px)}
-#aiFab svg{position:absolute;inset:0;margin:auto;width:34px;height:34px}
-#aiFab .on{position:absolute;top:2px;right:2px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+#aiTeaseX{position:absolute;top:4px;right:6px;width:24px;height:24px;background:none;border:0;color:var(--muted);font-size:1.1rem;line-height:1;cursor:pointer;border-radius:6px}
+#aiTeaseX:hover{color:var(--ink);background:var(--surface2)}
+#aiFab{position:relative;display:flex;align-items:center;gap:10px;height:56px;padding:6px 20px 6px 6px;border:0;border-radius:99px;background:var(--ink);color:var(--bg);cursor:pointer;box-shadow:0 14px 34px -14px rgba(0,0,0,.55);transition:transform .2s var(--ease),box-shadow .2s}
+#aiFab:hover{transform:translateY(-2px);box-shadow:0 20px 44px -16px rgba(0,0,0,.6)}
+#aiFab:active{transform:translateY(0)}
+#aiFab .fab-av{width:44px;height:44px;border-radius:50%;background:var(--bg);color:var(--ink);display:grid;place-items:center;flex:none}
+#aiFab .fab-av svg{width:26px;height:26px}
+#aiFab .fab-txt{display:grid;text-align:left;line-height:1.2}
+#aiFab .fab-txt b{font:700 .95rem var(--f-display);letter-spacing:-.01em}
+#aiFab .fab-txt small{font:.68rem var(--f-mono);opacity:.7;margin-top:2px}
+#aiFab .on{position:absolute;left:38px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--ink)}
 
-#aiPanel{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:96px;z-index:95;width:min(400px,calc(100vw - 24px));height:min(620px,calc(100vh - 120px));display:flex;flex-direction:column;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 30px 80px -30px rgba(0,0,0,.45),var(--shadow);overflow:hidden;transform-origin:bottom right;animation:aiIn .25s var(--ease) both}
+/* panel */
+#aiPanel{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:92px;z-index:95;width:min(420px,calc(100vw - 24px));height:min(680px,calc(100vh - 116px));display:flex;flex-direction:column;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.5),var(--shadow);overflow:hidden;transform-origin:bottom right;animation:aiIn .28s var(--ease) both}
 #aiPanel[hidden]{display:none}
-#aiPanel .aih{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s3) var(--s3) var(--s4);border-bottom:1px solid var(--line)}
-#aiPanel .aih .av{position:relative;width:38px;height:38px}
+#aiPanel .aih{display:flex;align-items:center;gap:var(--s3);padding:14px 12px 14px 16px;border-bottom:1px solid var(--line)}
+#aiPanel .aih .av{position:relative;width:40px;height:40px}
+#aiPanel .aih .av::before{content:"";position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
 #aiPanel.talking .aih .av::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--accent);animation:aiRing 1.2s ease-out infinite}
 #aiPanel .ttl{flex:1;min-width:0}
-#aiPanel .ttl b{display:flex;align-items:center;gap:7px;font:700 .98rem var(--f-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#aiPanel .ttl b i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent)}
-#aiPanel .ttl small{display:block;color:var(--muted);font:.72rem var(--f-mono)}
-#aiPanel .ib{flex:none;width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:.15s}
-#aiPanel .ib:hover{border-color:var(--line);color:var(--ink);background:var(--surface2)}
-#aiPanel .ib svg{width:17px;height:17px}
+#aiPanel .ttl b{display:block;font:700 1rem var(--f-display);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#aiPanel .ttl b i{display:none}
+#aiPanel .ttl small{display:block;color:var(--muted);font-size:.78rem}
+#aiPanel.talking .ttl small::before{content:"Speaking · "}
+#aiPanel .ib{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;border:0;background:transparent;color:var(--muted);cursor:pointer;transition:background .15s,color .15s}
+#aiPanel .ib:hover{color:var(--ink);background:var(--surface2)}
+#aiPanel .ib svg{width:18px;height:18px}
 #aiVol .x,#aiVol.off .w{display:none}
 #aiVol.off .x{display:inline}
-#aiBody{flex:1;overflow-y:auto;padding:var(--s4);scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-#aiPanel .aihero{display:grid;grid-template-columns:52px minmax(0,1fr);gap:var(--s3);align-items:start;margin-bottom:var(--s4)}
-#aiPanel .aihero .big{width:52px;height:52px}
-#aiPanel .bub{padding:var(--s3) var(--s4);border-radius:var(--r-md);background:var(--surface2)}
-#aiPanel .bub h3{font-size:1.02rem;line-height:1.3;margin-bottom:4px}
+#aiBody{flex:1;overflow-y:auto;padding:22px 16px 12px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;overscroll-behavior:contain}
+
+/* welcome screen */
+#aiPanel .aihero{display:grid;gap:14px;margin-bottom:22px}
+#aiPanel .aihero .big{width:56px;height:56px}
+#aiPanel .bub h3{font-size:1.45rem;line-height:1.15;letter-spacing:-.025em;margin-bottom:6px}
 #aiPanel .bub h3 span{color:var(--accent)}
-#aiPanel .bub p{font-size:.86rem;color:var(--muted);line-height:1.5}
-#aiPanel .ask{display:flex;align-items:center;gap:6px;color:var(--muted);font:.74rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s2)}
-#aiPanel .ask svg{width:14px;height:14px;color:var(--accent)}
-#aiTiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
-#aiTiles button{display:flex;align-items:center;gap:var(--s2);padding:11px 12px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:.86rem;font-weight:500;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
-#aiTiles button:hover{border-color:var(--accent);background:var(--accent-soft)}
-#aiTiles svg{flex:none;width:18px;height:18px;color:var(--accent)}
-#aiPanel.started .ask,#aiPanel.started #aiTiles{display:none}
-#aiPanel.started .aihero{grid-template-columns:36px minmax(0,1fr);margin-bottom:var(--s3)}
-#aiPanel.started .aihero .big{width:36px;height:36px}
-#aiPanel.started .bub p{display:none}
-#aiPanel.started .bub h3{font-size:.92rem;margin:0}
-#aiLog{display:flex;flex-direction:column;gap:var(--s3)}
-#aiPanel .row{display:flex;gap:var(--s2);align-items:flex-end;animation:aiIn .25s var(--ease) both}
+#aiPanel .bub p{font-size:.92rem;color:var(--muted);line-height:1.55}
+#aiPanel .ask{display:flex;align-items:center;gap:6px;color:var(--muted);font:.72rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+#aiPanel .ask svg{width:13px;height:13px;color:var(--accent)}
+#aiTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#aiTiles button{display:grid;grid-template-columns:32px minmax(0,1fr);gap:4px 10px;align-items:center;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;cursor:pointer;transition:border-color .15s,background .15s,transform .15s var(--ease)}
+#aiTiles button:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));background:var(--accent-soft);transform:translateY(-1px)}
+#aiTiles .ti{grid-row:span 2;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+#aiTiles button:hover .ti{background:var(--surface)}
+#aiTiles svg{width:17px;height:17px}
+#aiTiles b{font-size:.86rem;font-weight:600;line-height:1.25}
+#aiTiles small{font-size:.74rem;color:var(--muted);line-height:1.3}
+#aiPanel.started .aihero,#aiPanel.started .ask,#aiPanel.started #aiTiles{display:none}
+
+/* conversation */
+#aiLog{display:flex;flex-direction:column;gap:14px}
+#aiPanel .row{display:flex;gap:10px;align-items:flex-start;animation:aiMsg .25s var(--ease) both}
 #aiPanel .row.u{justify-content:flex-end}
-#aiPanel .row .mini{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg);flex:none}
-#aiPanel .row .mini svg{width:16px;height:16px}
-#aiPanel .m{max-width:84%;padding:10px 13px;border-radius:var(--r-md);font-size:.9rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
-#aiPanel .m.b{background:var(--surface2);border-bottom-left-radius:3px}
-#aiPanel .m.u{background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:3px}
-#aiPanel .typing{display:inline-flex;gap:4px;padding:4px 2px}
+#aiPanel .row .mini{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg);flex:none;margin-top:2px}
+#aiPanel .row .mini svg{width:17px;height:17px}
+#aiPanel .m{max-width:84%;padding:10px 14px;font-size:.92rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+#aiPanel .m.b{background:var(--surface2);border-radius:4px 16px 16px 16px}
+#aiPanel .m.u{background:var(--accent);color:var(--accent-ink);border-radius:16px 16px 4px 16px}
+#aiPanel .m .time{display:block;margin-top:4px;font:.66rem var(--f-mono);color:var(--muted);white-space:nowrap}
+#aiPanel .m.u .time{color:inherit;opacity:.75;text-align:right}
+#aiPanel .typing{display:inline-flex;gap:4px;padding:5px 2px}
 #aiPanel .typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:aiDot 1.2s infinite}
 #aiPanel .typing i:nth-child(2){animation-delay:.15s}
 #aiPanel .typing i:nth-child(3){animation-delay:.3s}
-#aiPanel .acts{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s2);white-space:normal}
-#aiPanel .acts a,#aiPanel .acts button{padding:6px 11px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .8rem var(--f-body);cursor:pointer}
+#aiPanel .acts{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:10px;white-space:normal}
+#aiPanel .acts a,#aiPanel .acts button{padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .8rem var(--f-body);cursor:pointer;transition:border-color .15s,color .15s}
 #aiPanel .acts a:hover,#aiPanel .acts button:hover{border-color:var(--accent);color:var(--accent)}
-#aiChips{display:none;gap:6px;overflow-x:auto;padding:var(--s2) var(--s4) 0;scrollbar-width:none}
+#aiChips{display:none;gap:6px;overflow-x:auto;padding:10px 16px 2px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
 #aiChips::-webkit-scrollbar{display:none}
 #aiPanel.started #aiChips{display:flex}
-#aiChips button{flex:none;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:.78rem;cursor:pointer;white-space:nowrap}
-#aiChips button:hover{color:var(--ink);border-color:var(--ink)}
-#aiStatus{padding:4px var(--s4) 0;min-height:1.4em;font-size:.78rem;color:var(--accent)}
-#aiWho{display:flex;gap:6px;padding:4px var(--s4)}
-#aiWho input{flex:1;min-width:0;padding:7px 10px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--bg);color:var(--ink);font:.8rem var(--f-body)}
-#aiWho button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r-sm);padding:0 12px;font:600 .78rem var(--f-body);cursor:pointer}
+#aiChips button{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:.8rem;cursor:pointer;white-space:nowrap;transition:border-color .15s,background .15s}
+#aiChips button:hover{border-color:var(--accent);background:var(--accent-soft)}
+#aiStatus{padding:4px 16px 0;min-height:1.4em;font-size:.78rem;color:var(--accent)}
+#aiWho{display:flex;gap:6px;padding:4px 16px}
+#aiWho input{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:.8rem var(--f-body)}
+#aiWho button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:0 12px;font:600 .78rem var(--f-body);cursor:pointer}
 #aiWho[hidden],#aiNote[hidden]{display:none}
-#aiNote{padding:2px var(--s4) 0;font-size:.7rem;color:var(--muted);line-height:1.35}
-#aiForm{display:flex;align-items:center;gap:var(--s2);padding:var(--s2) var(--s3) var(--s3);border-top:1px solid var(--line);margin-top:var(--s2)}
-#aiPanel .pill{flex:1;min-width:0;display:flex;align-items:center;gap:4px;padding:4px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--bg);transition:border-color .15s,box-shadow .15s}
+#aiNote{padding:2px 16px 0;font-size:.7rem;color:var(--muted);line-height:1.35}
+
+/* composer */
+#aiForm{display:flex;align-items:flex-end;gap:var(--s2);padding:10px 12px 6px}
+#aiPanel .pill{flex:1;min-width:0;display:flex;align-items:center;gap:4px;padding:5px;border-radius:16px;border:1px solid var(--line);background:var(--bg);transition:border-color .15s,box-shadow .15s}
 #aiPanel .pill:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-#aiInput{flex:1;min-width:0;padding:9px 6px;border:0;background:none;color:var(--ink);font:.93rem var(--f-body);outline:none}
+#aiInput{flex:1;min-width:0;padding:10px 8px;border:0;background:none;color:var(--ink);font:.95rem var(--f-body);outline:none}
 #aiInput::placeholder{color:var(--muted)}
-#aiMic{position:relative;flex:none;width:36px;height:36px;border-radius:var(--r-sm);border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.15s}
+#aiMic{position:relative;flex:none;width:38px;height:38px;border-radius:12px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
 #aiMic:hover{color:var(--ink);background:var(--surface2)}
 #aiMic[hidden]{display:none}
-#aiMic svg{width:18px;height:18px}
+#aiMic svg{width:19px;height:19px}
 #aiMic.on{background:var(--danger);color:#fff}
-#aiMic.on::after{content:"";position:absolute;inset:-4px;border-radius:9px;border:2px solid var(--danger);animation:aiRing 1.4s ease-out infinite}
+#aiMic.on::after{content:"";position:absolute;inset:-4px;border-radius:15px;border:2px solid var(--danger);animation:aiRing 1.4s ease-out infinite}
 #aiPanel.listening .pill{border-color:var(--danger);box-shadow:0 0 0 3px color-mix(in srgb,var(--danger) 18%,transparent)}
-#aiSend{flex:none;width:44px;height:44px;border-radius:var(--r-md);border:0;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);cursor:pointer;transition:filter .15s,transform .15s var(--ease)}
+#aiSend{flex:none;width:50px;height:50px;border-radius:16px;border:0;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);cursor:pointer;transition:filter .15s,transform .15s var(--ease)}
 #aiSend:hover{filter:brightness(1.08)}
-#aiSend:active{transform:translateY(1px)}
+#aiSend:active{transform:scale(.96)}
 #aiSend:disabled{opacity:.6;cursor:wait}
-#aiSend svg{width:19px;height:19px;margin-left:-2px}
+#aiSend svg{width:20px;height:20px;margin-left:-2px}
+#aiPanel .ai-foot{padding:0 16px 12px;font-size:.7rem;color:var(--muted);text-align:center}
+
+@media (max-width:640px){
+  #aiFab{width:58px;height:58px;padding:7px;justify-content:center}
+  #aiFab .fab-txt{display:none}
+  #aiFab .on{left:auto;right:4px;top:4px}
+}
 @media (max-width:520px){
   #aiDock{right:14px;bottom:14px}
   #aiTease{max-width:210px;font-size:.84rem}
-  #aiPanel{left:8px;right:8px;top:8px;bottom:8px;width:auto;height:auto}
+  #aiPanel{inset:0;width:auto;height:auto;border-radius:0;border:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   #aiPanel:not([hidden])+#aiDock{display:none}
+  #aiTiles{grid-template-columns:minmax(0,1fr)}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -410,7 +435,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
   <aside class="side" aria-label="Shipped results">
     <div class="portrait">
       <img src="profile3.jpg" alt="Sarbjit Raju" width="720" height="900">
-      <p><b>.NET &amp; Agentic AI Developer</b>Revclerx AI Solutions · since Apr 2023</p>
+      <p><b>.NET &amp; Agentic AI Developer</b>Revclerx AI Solutions · <span data-exp="short">3+ yrs</span></p>
     </div>
     <div class="ledger">
       <header><span class="label">Shipped results</span><span class="label ok">in production</span></header>
@@ -472,6 +497,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
   <div class="job rv">
     <div class="job-side">
       <span class="when">Apr 2023 – Present</span>
+      <span class="label" data-exp="short">3+ yrs</span>
       <p>Revclerx AI Solutions Pvt. Ltd.<br>(formerly Revclerx Pvt. Ltd.)</p>
       <p>B2B SaaS startup (~20-person team) building marketing automation tools for enterprise clients.</p>
     </div>
@@ -524,12 +550,12 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
   <div class="about">
     <div class="text rv">
       <p>One of the rare <strong>.NET developers who has shipped production Agentic AI and Generative AI systems</strong>, including RAG pipelines and autonomous LLM-powered automation, in a live enterprise SaaS product.</p>
-      <p>Over <strong>3 years at Revclerx AI Solutions</strong> (formerly Revclerx Pvt. Ltd.), I redesigned GPT-4 prompt pipelines that lifted AI response accuracy from 55% to 78%, built agentic workflows that saved 20+ hours a month, and delivered 10+ production releases with zero critical incidents.</p>
+      <p>In <strong><span data-exp="long">3+ years</span> at Revclerx AI Solutions</strong> (formerly Revclerx Pvt. Ltd.), I redesigned GPT-4 prompt pipelines that lifted AI response accuracy from 55% to 78%, built agentic workflows that saved 20+ hours a month, and delivered 10+ production releases with zero critical incidents.</p>
       <p>I'm targeting <strong>Senior .NET / Generative AI &amp; Agentic AI Engineer</strong> roles where deep backend engineering and applied LLM expertise are both valued.</p>
     </div>
     <ul class="facts rv">
       <li><span>Role</span><b>.NET &amp; AI Developer</b></li>
-      <li><span>Experience</span><b>3+ years</b></li>
+      <li><span>Experience</span><b data-exp="long">3+ years</b></li>
       <li><span>Location</span><b>Mohali, Punjab</b></li>
       <li><span>Relocation</span><b>Open</b></li>
       <li><span>Focus</span><b>RAG · Agents · APIs</b></li>
@@ -587,7 +613,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
 <div id="aiPanel" role="dialog" aria-label="Sarbjit's AI Assistant" hidden>
   <div class="aih">
     <div class="av mono-av"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg></div>
-    <div class="ttl"><b><i aria-hidden="true"></i>Sarbjit's AI Assistant</b><small>Answers from his résumé</small></div>
+    <div class="ttl"><b><i aria-hidden="true"></i>Sarbjit's AI Assistant</b><small>Online · answers in seconds</small></div>
     <button id="aiVol" class="ib" type="button" aria-label="Mute voice replies" aria-pressed="false" title="Voice replies on/off">
       <svg class="w" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
       <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 6 6M22 9l-6 6"/></svg>
@@ -598,14 +624,14 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
   <div id="aiBody">
     <div class="aihero">
       <div class="big mono-av"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg></div>
-      <div class="bub"><h3>Hi! I'm Sarbjit's <span>AI Assistant.</span></h3><p>Ask me anything about Sarbjit, or explore his skills, experience and projects.</p></div>
+      <div class="bub"><h3>Hi! I'm Sarbjit's <span>AI Assistant.</span></h3><p>Ask me about his experience, the AI systems he has shipped, his skills, or how to reach him. You can type or use your voice.</p></div>
     </div>
-    <div class="ask"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/></svg>You can ask</div>
+    <div class="ask"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/></svg>Start with</div>
     <div id="aiTiles">
-      <button type="button" data-q="Tell me about Sarbjit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.7-4.3 4-7 8-7s7.3 2.7 8 7"/></svg>About Sarbjit</button>
-      <button type="button" data-q="What are his skills and experience?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13.5 5l-3 14"/></svg>Skills &amp; Experience</button>
-      <button type="button" data-q="What projects has he built?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>View Projects</button>
-      <button type="button" data-q=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>Ask a Question</button>
+      <button type="button" data-q="Tell me about Sarbjit"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.7-4.3 4-7 8-7s7.3 2.7 8 7"/></svg></span><b>About Sarbjit</b><small>His background in brief</small></button>
+      <button type="button" data-q="What are his skills and experience?"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13.5 5l-3 14"/></svg></span><b>Skills &amp; Experience</b><small>Stack and current role</small></button>
+      <button type="button" data-q="What projects has he built?"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><b>View Projects</b><small>RAG, agents, platform</small></button>
+      <button type="button" data-q=""><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg></span><b>Ask a Question</b><small>Type or speak</small></button>
     </div>
     <div id="aiLog" aria-live="polite"></div>
   </div>
@@ -624,16 +650,31 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);p
     </div>
     <button id="aiSend" type="submit" aria-label="Send"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 3.2 2.9 10.4c-.9.4-.9 1.6 0 1.9l4.6 1.6 1.7 5.6c.3.9 1.4 1.1 2 .4l2.5-2.8 4.6 3.4c.7.5 1.7.1 1.9-.7l3-14.7c.2-1-.8-1.8-1.8-1.4zM9.6 14.1l8.2-6.9-6.3 8.1-.4 2.6z"/></svg></button>
   </form>
+  <p class="ai-foot">AI answers based on Sarbjit's résumé. For anything else, use the Contact section.</p>
 </div>
 
 <div id="aiDock">
   <div id="aiTease" hidden><button id="aiTeaseX" type="button" aria-label="Dismiss">×</button>Questions about Sarbjit's work?<b>Ask the AI assistant</b></div>
-  <button id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg><i class="on" aria-hidden="true"></i><span class="sr">Open Sarbjit's AI assistant</span></button>
+  <button id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel"><span class="fab-av"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#bot"/></svg></span><span class="fab-txt" aria-hidden="true"><b>Ask my AI</b><small>about my work</small></span><i class="on" aria-hidden="true"></i><span class="sr">Open Sarbjit's AI assistant</span></button>
 </div>
 
 <script>
 // year
 document.getElementById('y').textContent=new Date().getFullYear();
+
+// experience: counted from the Revclerx start date, so it grows automatically
+const EXP_START=new Date(2023,3,1); // 1 April 2023 (months are 0-based)
+function expParts(now=new Date()){
+  let m=(now.getFullYear()-EXP_START.getFullYear())*12+now.getMonth()-EXP_START.getMonth();
+  if(now.getDate()<EXP_START.getDate())m--;
+  m=Math.max(0,m);return [Math.floor(m/12),m%12];
+}
+function expText(kind){
+  const [y,m]=expParts(),s=n=>n===1?'':'s';
+  if(kind==='short')return (y?y+' yr'+s(y):'')+(y&&m?' ':'')+(m?m+' mo'+s(m):'');
+  return (y?y+' year'+s(y):'')+(y&&m?' ':'')+(m?m+' month'+s(m):'');
+}
+document.querySelectorAll('[data-exp]').forEach(el=>{el.textContent=expText(el.dataset.exp)});
 
 // theme (remembered; follows the system until the visitor picks one)
 const root=document.documentElement,tb=document.getElementById('theme');

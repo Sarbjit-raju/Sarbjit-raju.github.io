@@ -5,6 +5,16 @@
 (function () {
   'use strict';
 
+  // ---------- experience, counted from the Revclerx start date (1 April 2023) ----------
+  const EXP = (function () {
+    const start = new Date(2023, 3, 1), now = new Date();
+    let m = (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth();
+    if (now.getDate() < start.getDate()) m--;
+    m = Math.max(0, m);
+    const y = Math.floor(m / 12), r = m % 12, s = n => (n === 1 ? '' : 's');
+    return (y ? y + ' year' + s(y) : '') + (y && r ? ' ' : '') + (r ? r + ' month' + s(r) : '');
+  })();
+
   // ---------- knowledge base ----------
   const KB = [
     { id: 'greet', k: ['hi', 'hello', 'hey', 'good morning', 'good evening', 'good afternoon', 'namaste'],
@@ -12,9 +22,9 @@
     { id: 'thanks', k: ['thanks', 'thank you', 'thankyou', 'great', 'awesome', 'nice', 'cool', 'bye', 'goodbye'],
       a: "You're welcome! If you'd like to talk to Sarbjit directly, use the Send email, Call me or WhatsApp buttons in the Contact section." },
     { id: 'about', generic: true, k: ['who is', 'who are you', 'introduce', 'yourself', 'tell me about', 'about sarbjit', 'about him', 'summary', 'profile', 'overview', 'sarbjit', 'describe'],
-      a: "Sarbjit Raju is a .NET Full Stack Developer and Agentic AI / Generative AI integration specialist based in Mohali, Punjab. He has shipped production RAG pipelines and autonomous LLM-powered automation in a live enterprise SaaS product, with 3+ years of experience at Revclerx AI Solutions." },
+      a: "Sarbjit Raju is a .NET Full Stack Developer and Agentic AI / Generative AI integration specialist based in Mohali, Punjab. He has shipped production RAG pipelines and autonomous LLM-powered automation in a live enterprise SaaS product, with " + EXP + " of experience at Revclerx AI Solutions." },
     { id: 'experience', w: 0.7, k: ['where does he work', 'where do you work', 'work experience', 'experience', 'work', 'job', 'company', 'employer', 'revclerx', 'role', 'position', 'designation', 'career', 'currently working', 'present'],
-      a: "Since April 2023, Sarbjit has been a Software Developer (.NET & AI) at Revclerx AI Solutions Pvt. Ltd. (formerly Revclerx Pvt. Ltd.), a B2B SaaS startup of about 20 people building marketing automation tools for enterprise clients. His work covers Agentic AI / Generative AI / RAG and the core .NET platform." },
+      a: "Since April 2023 (" + EXP + "), Sarbjit has been a Software Developer (.NET & AI) at Revclerx AI Solutions Pvt. Ltd. (formerly Revclerx Pvt. Ltd.), a B2B SaaS startup of about 20 people building marketing automation tools for enterprise clients. His work covers Agentic AI / Generative AI / RAG and the core .NET platform." },
     { id: 'rag', k: ['rag system', 'system', 'rag', 'retrieval', 'langchain', 'llamaindex', 'llama index', 'documents', 'azure openai', 'gpt', 'search', 'natural language', 'chatbot', 'llm'],
       a: "Sarbjit architected and shipped a production Agentic AI-driven RAG system using LangChain, LlamaIndex and Azure OpenAI (GPT-4). It lets enterprise users query 10,000+ internal documents in natural language, replacing a slow keyword search that needed manual effort for every query." },
     { id: 'accuracy', k: ['accuracy', 'prompt', 'prompts', 'improve', 'improved', '55', '78', 'benchmark', 'hallucination', 'escalation', 'escalations'],
@@ -199,6 +209,11 @@
         const a = document.createElement('a'); a.href = 'https://linkedin.com/in/sarbjit-raju'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open LinkedIn ↗'; acts.appendChild(a);
       }
       d.appendChild(acts);
+    }
+    if (text) {
+      const tm = document.createElement('small'); tm.className = 'time';
+      tm.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      d.appendChild(tm);
     }
     row.appendChild(d); log.appendChild(row); toEnd();
     return row;
